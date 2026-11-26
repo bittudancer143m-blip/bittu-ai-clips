@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bittu AI Clips</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b1020;
+  color: white;
+}
+
+header {
+  padding: 20px;
+  background: #151d32;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+header span {
+  color: #38bdf8;
+}
+
+.container {
+  max-width: 750px;
+  margin: 45px auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 32px;
+}
+
+p {
+  text-align: center;
+  color: #aab4c8;
+}
+
+.upload {
+  margin-top: 35px;
+  padding: 45px 20px;
+  text-align: center;
+  border: 2px dashed #38bdf8;
+  border-radius: 18px;
+  background: #151d32;
+}
+
+input {
+  margin: 20px auto;
+  max-width: 100%;
+}
+
+button {
+  padding: 14px 25px;
+  border: none;
+  border-radius: 10px;
+  background: #38bdf8;
+  color: #07111f;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.card {
+  background: #151d32;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #8491a8;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  BITTU <span>AI CLIPS</span>
+</header>
+
+<div class="container">
+
+<h1>Turn Long Videos Into Shorts</h1>
+
+<p>Upload your video and create short clips with AI.</p>
+
+<div class="upload">
+
+<h2>Upload Your Video</h2>
+
+<p>Select a long video from your device.</p>
+
+<input type="file" id="video" accept="video/*">
+
+<br>
+
+<button onclick="uploadVideo()">
+  Start Creating Clips
+</button>
+
+<p id="status"></p>
+
+</div>
+
+<div class="features">
+
+<div class="card">
+<h3>🤖 AI Detection</h3>
+<p>Find interesting moments.</p>
+</div>
+
+<div class="card">
+<h3>✂️ Auto Cutting</h3>
+<p>Create short clips.</p>
+</div>
+
+<div class="card">
+<h3>📝 Auto Captions</h3>
+<p>Add subtitles.</p>
+</div>
+
+<div class="card">
+<h3>📱 Shorts Format</h3>
+<p>Vertical 9:16 videos.</p>
+</div>
+
+</div>
+</div>
+
+<footer>
+© 2026 BITTU AI CLIPS
+</footer>
+
+<script>
+function uploadVideo() {
+  const file = document.getElementById("video").files[0];
+
+  if (!file) {
+    alert("Please select a video first!");
+    return;
+  }
+
+  document.getElementById("status").innerText =
+    "Video selected: " + file.name +
+    ". AI processing will be added next.";
+}
+</script>
+
+</body>
+</html>
