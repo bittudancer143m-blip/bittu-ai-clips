@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bittu AI Clips</title>
+<title>BITTU AI CLIPS</title>
 
 <style>
 * {
@@ -19,9 +19,9 @@ body {
 }
 
 header {
-  padding: 20px;
+  padding: 22px;
   background: #151d32;
-  font-size: 23px;
+  font-size: 25px;
   font-weight: bold;
 }
 
@@ -31,7 +31,7 @@ header span {
 
 .container {
   max-width: 750px;
-  margin: 45px auto;
+  margin: 40px auto;
   padding: 20px;
 }
 
@@ -40,33 +40,64 @@ h1 {
   font-size: 32px;
 }
 
-p {
+.subtitle {
   text-align: center;
   color: #aab4c8;
+  line-height: 1.6;
 }
 
 .upload {
   margin-top: 35px;
-  padding: 45px 20px;
+  padding: 30px 20px;
   text-align: center;
   border: 2px dashed #38bdf8;
   border-radius: 18px;
   background: #151d32;
 }
 
-input {
-  margin: 20px auto;
-  max-width: 100%;
+input, select {
+  width: 100%;
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 10px;
+  border: 1px solid #38bdf8;
+  background: #0b1020;
+  color: white;
+  font-size: 15px;
 }
 
 button {
-  padding: 14px 25px;
+  padding: 15px 25px;
   border: none;
   border-radius: 10px;
   background: #38bdf8;
   color: #07111f;
   font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+#preview {
+  margin-top: 20px;
+  display: none;
+}
+
+iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: none;
+  border-radius: 12px;
+}
+
+#status {
+  color: #38bdf8;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
 }
 
 .features {
@@ -83,38 +114,73 @@ button {
   text-align: center;
 }
 
+.card p {
+  color: #aab4c8;
+  font-size: 14px;
+}
+
 footer {
   text-align: center;
   padding: 30px;
   color: #8491a8;
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
-  BITTU <span>AI CLIPS</span>
+BITTU <span>AI CLIPS</span>
 </header>
 
 <div class="container">
 
 <h1>Turn Long Videos Into Shorts</h1>
 
-<p>Upload your video and create short clips with AI.</p>
+<p class="subtitle">
+Paste a YouTube video link and prepare it for AI clipping.
+</p>
 
 <div class="upload">
 
-<h2>Upload Your Video</h2>
+<h2>🎬 Add YouTube Video</h2>
 
-<p>Select a long video from your device.</p>
+<p>Paste your YouTube video URL below.</p>
 
-<input type="file" id="video" accept="video/*">
+<input
+type="url"
+id="videoLink"
+placeholder="https://www.youtube.com/watch?v=..."
+>
+
+<button onclick="previewVideo()">
+Load Video Preview
+</button>
+
+<div id="preview">
+<h3>Video Preview</h3>
+<iframe
+id="player"
+allowfullscreen
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+</iframe>
+</div>
 
 <br>
 
-<button onclick="uploadVideo()">
-  Start Creating Clips
+<h3>Select Clip Length</h3>
+
+<select id="clipLength">
+<option value="30">30 Seconds</option>
+<option value="45">45 Seconds</option>
+<option value="60">60 Seconds</option>
+</select>
+
+<br><br>
+
+<button onclick="startClipping()">
+🚀 Start Creating Clips
 </button>
 
 <p id="status"></p>
@@ -144,6 +210,7 @@ footer {
 </div>
 
 </div>
+
 </div>
 
 <footer>
@@ -151,18 +218,94 @@ footer {
 </footer>
 
 <script>
-function uploadVideo() {
-  const file = document.getElementById("video").files[0];
 
-  if (!file) {
-    alert("Please select a video first!");
-    return;
-  }
+let currentVideoId = "";
 
-  document.getElementById("status").innerText =
-    "Video selected: " + file.name +
-    ". AI processing will be added next.";
+function getYouTubeID(link) {
+
+try {
+
+const url = new URL(link);
+
+if (url.hostname === "youtu.be") {
+return url.pathname.slice(1).split("/")[0];
 }
+
+if (
+url.hostname === "youtube.com" ||
+url.hostname === "www.youtube.com" ||
+url.hostname === "m.youtube.com"
+) {
+
+if (url.pathname === "/watch") {
+return url.searchParams.get("v");
+}
+
+if (url.pathname.startsWith("/shorts/") ||
+url.pathname.startsWith("/embed/")) {
+
+return url.pathname.split("/")[2];
+}
+
+}
+
+return null;
+
+} catch (error) {
+return null;
+}
+
+}
+
+function previewVideo() {
+
+const link = document.getElementById("videoLink").value.trim();
+
+const status = document.getElementById("status");
+
+const id = getYouTubeID(link);
+
+if (!id || !/^[a-zA-Z0-9_-]{11}$/.test(id)) {
+
+status.innerText = "Please enter a valid YouTube video link.";
+
+document.getElementById("preview").style.display = "none";
+
+return;
+}
+
+currentVideoId = id;
+
+document.getElementById("player").src =
+"https://www.youtube-nocookie.com/embed/" + id;
+
+document.getElementById("preview").style.display = "block";
+
+status.innerText = "Video preview loaded successfully!";
+
+}
+
+function startClipping() {
+
+const status = document.getElementById("status");
+
+if (!currentVideoId) {
+
+status.innerText = "First load a YouTube video preview.";
+
+return;
+
+}
+
+const duration = document.getElementById("clipLength").value;
+
+status.innerText =
+"Video ID: " + currentVideoId +
+" | Clip Length: " + duration +
+" seconds. Backend AI processing is not connected yet.";
+
+}
+
 </script>
 
 </body>
